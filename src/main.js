@@ -9,7 +9,7 @@ import simpleLightbox from 'simplelightbox';
 
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import { getImages } from './js/pixabay-api';
+import { getImages, showError } from './js/pixabay-api';
 import {
   imageTemplate,
   imagesTemplate,
@@ -17,12 +17,13 @@ import {
   hideLoader,
   showLoadButton,
   hideLoadButton,
+  skipOldElement,
   refs,
 } from './js/render-functions';
 
 let searchName;
 let currentPage = 1;
-let maxPage = 1;
+export let maxPage = 1;
 const perPage = 15;
 
 hideLoader();
@@ -36,14 +37,17 @@ refs.formElem.addEventListener('submit', async e => {
   e.preventDefault();
 
   searchName = e.target.elements.query.value.trim();
+  if (!searchName) {
+    showError('The input field must not be empty');
+    return;
+  }
   currentPage = 1;
   showLoader();
-
+  hideLoadButton();
   refs.galleryElem.innerHTML = '';
 
   try {
     const res = await getImages(searchName, currentPage);
-    console.log(res);
     maxPage = Math.ceil(res.totalHits / perPage);
     const markup = imagesTemplate(res);
     refs.galleryElem.innerHTML = markup;
@@ -52,31 +56,40 @@ refs.formElem.addEventListener('submit', async e => {
 
     lightbox.refresh();
   } catch (error) {
-    iziToast.error({
-      message:
-        'Sorry, there was an error fetching images. Please try again later!',
-      maxWidth: '322px',
-      iconUrl: closeImageURL,
-      backgroundColor: '#EF4040',
-      messageColor: '#fff',
-      titleColor: '#fff',
-      theme: 'dark',
-    });
+    showError(
+      'Sorry, there was an error fetching images.Please try again later!'
+    );
   }
 
   hideLoader();
 });
-function updateBtnStatus() {
+
+refs.btnLoadMore.addEventListener('click', async () => {
+  currentPage++;
+  showLoader();
+  hideLoadButton();
+  try {
+    const res = await getImages(searchName, currentPage);
+    const markup = imagesTemplate(res);
+    refs.galleryElem.insertAdjacentHTML('beforeend', markup);
+    skipOldElement();
+  } catch {
+    showError('Something goes wrong!');
+  }
+
+  hideLoader();
+  updateBtnStatus();
+});
+export function updateBtnStatus() {
   if (currentPage >= maxPage) {
     hideLoadButton();
+    if (maxPage) {
+      iziToast.info({
+        message: "We're sorry, but you've reached the end of search results.",
+        position: 'topRight',
+      });
+    }
   } else {
     showLoadButton();
   }
 }
-refs.btnLoadMore.addEventListener('click', async () => {
-  currentPage++;
-  const res = await getImages(searchName, currentPage);
-  const markup = imagesTemplate(res);
-  refs.galleryElem.insertAdjacentHTML('beforeend', markup);
-  updateBtnStatus();
-});

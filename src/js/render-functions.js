@@ -55,6 +55,16 @@ export function imageTemplate({
         </li>
   `;
 }
+
 export function imagesTemplate(data) {
   return data.hits.map(image => imageTemplate(image)).join('\n');
+}
+export function skipOldElement() {
+  const liElem = refs.galleryElem.children[0];
+  const height = liElem.getBoundingClientRect().height;
+
+  window.scrollBy({
+    top: height * 3,
+    behavior: 'smooth',
+  });
 }

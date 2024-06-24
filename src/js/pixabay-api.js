@@ -21,29 +21,26 @@ export async function getImages(userSymbol, currentPage) {
       },
     });
     if (responce.data.hits.length === 0) {
-      iziToast.error({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        maxWidth: '322px',
-        iconUrl: closeImageURL,
-        backgroundColor: '#EF4040',
-        messageColor: '#fff',
-        titleColor: '#fff',
-        theme: 'dark',
-      });
+      showError(
+        'Sorry, there are no images matching your search query. Please try again!'
+      );
     }
     return responce.data;
   } catch (error) {
-    iziToast.error({
-      message:
-        'Sorry, there was an error fetching images. Please try again later!',
-      maxWidth: '322px',
-      iconUrl: closeImageURL,
-      backgroundColor: '#EF4040',
-      messageColor: '#fff',
-      titleColor: '#fff',
-      theme: 'dark',
-    });
+    showError(
+      'Sorry, there was an error fetching images. Please try again later!'
+    );
   }
   throw Error;
+}
+export function showError(message) {
+  iziToast.error({
+    message,
+    maxWidth: '322px',
+    iconUrl: closeImageURL,
+    backgroundColor: '#EF4040',
+    messageColor: '#fff',
+    titleColor: '#fff',
+    theme: 'dark',
+  });
 }
