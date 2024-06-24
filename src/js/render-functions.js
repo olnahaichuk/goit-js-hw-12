@@ -64,7 +64,7 @@ export function skipOldElement() {
   const height = liElem.getBoundingClientRect().height;
 
   window.scrollBy({
-    top: height * 3,
+    top: height * 2,
     behavior: 'smooth',
   });
 }
