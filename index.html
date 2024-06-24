@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title></title>
+    
+    <script type="module" crossorigin src="/goit-js-hw-12/commonHelpers.js"></script>
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-da73009b.js">
+    <link rel="stylesheet" href="/goit-js-hw-12/assets/vendor-1cd1f9d9.css">
+    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-70380b76.css">
+  </head>
+  <body>
+    <section>
+      <form class="search-js">
+        <input
+          type="text"
+          class="form-control"
+          name="query"
+          placeholder="Search Images..."
+        />
+        <button type="button ">Search</button>
+      </form>
+
+      <ul class="gallery"></ul>
+      <!-- Path to images as from index.html file -->
+    </section>
+
+    <!-- Loads the specified .html file -->
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary button js-btn-load hidden-btn"
+        data-action="load-more"
+      >
+        <span class="label">Load more</span>
+      </button>
+    </div>
+    <span class="js-loader loader hidden"></span>
+    
+  </body>
+</html>
