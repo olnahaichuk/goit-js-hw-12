@@ -73,6 +73,7 @@ refs.btnLoadMore.addEventListener('click', async () => {
     const markup = imagesTemplate(res);
     refs.galleryElem.insertAdjacentHTML('beforeend', markup);
     skipOldElement();
+    lightbox.refresh();
   } catch {
     showError('Something goes wrong!');
   }
